@@ -1,8 +1,10 @@
 from flask import Flask 
 from home.home import home
 from user.user import user
+from buckets.bucket import bucket
 from database import db
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db_sqlite.db'
@@ -17,6 +19,8 @@ migrate = Migrate(app, db)
 
 app.register_blueprint(home)
 app.register_blueprint(user)
+app.register_blueprint(bucket)
+JWTManager(app)
 
 
 if __name__ == "__main__":
