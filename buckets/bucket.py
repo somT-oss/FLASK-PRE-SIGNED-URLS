@@ -10,7 +10,7 @@ def all_bucket():
     for bucket in all_buckets:
         bucket_list.append({
             "bucket-id": bucket.bucket_id,
-            "bucket-name": name,
+            "bucket-name": bucket.name,
             "bucket-description": bucket.description
         })
 

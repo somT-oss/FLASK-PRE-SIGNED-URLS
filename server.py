@@ -14,7 +14,7 @@ app.config['JWT_SECRET_KEY'] = 'test'
 db.app = app
 db.init_app(app)
 
-migrate = Migrate(app, db)
+migrate = Migrate(app, db, render_as_batch=True)
 
 
 app.register_blueprint(home)
