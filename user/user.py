@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import User, db
 import validators
+import pprint
+
 
 user = Blueprint("user", __name__, url_prefix="/users")
 
@@ -60,3 +62,13 @@ def login():
                 "access-token": access_token
             })
     return jsonify({"error": "Incorrect Credentials"}), 400
+
+@user.get("/me")
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+
+    return jsonify({
+        "Message": f"Welcome {user.username}"
+    }), 200
