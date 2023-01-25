@@ -48,5 +48,18 @@ def create_bucket():
 
 @bucket.get("/bucket/<bucket_id>")
 @jwt_required()
-def get_bucket():
-    pass
+def get_bucket(bucket_id):
+    bucket_info = Bucket.query.filter_by(bucket_id=bucket_id).first()
+
+    if not bucket_info:
+        return jsonify({"Error": "Incorrect bucket id"}), 400
+    
+    return jsonify({
+        "Bucket": {
+            "name": bucket_info.name,
+            "description": bucket_info.description,
+            "bucket_id": bucket_info.bucket_id,
+            "created_at": bucket_info.created_at,
+            "updated_at": bucket_info.updated_at
+        }
+    }), 200
