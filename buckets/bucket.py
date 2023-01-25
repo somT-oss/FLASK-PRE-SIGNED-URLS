@@ -13,7 +13,8 @@ def all_bucket():
         bucket_list.append({
             "bucket-id": bucket.bucket_id,
             "bucket-name": bucket.name,
-            "bucket-description": bucket.description
+            "bucket-description": bucket.description,
+            "image_link": bucket.image_link,
         })
 
     return jsonify({"buckets": bucket_list}), 200 
@@ -59,7 +60,26 @@ def get_bucket(bucket_id):
             "name": bucket_info.name,
             "description": bucket_info.description,
             "bucket_id": bucket_info.bucket_id,
+            "image_link": bucket_info.image_link,
             "created_at": bucket_info.created_at,
             "updated_at": bucket_info.updated_at
         }
+    }), 200
+
+
+@bucket.put("/bucket/<bucket_id>/edit/")
+@bucket.patch("bucket/<bucket_id>/edit/")
+@jwt_required()
+def edit_bucket(bucket_id):
+    image_link = request.json.get("image_link", "")
+
+    bucket = Bucket.query.filter_by(bucket_id=bucket_id).first()
+
+    if not bucket:
+        return jsonify({"Error": "Invalid bucket ID"}), 400 
+    bucket.image_link = image_link
+    db.session.commit()
+
+    return jsonify({
+        "Message": "Bucket successfully updated"
     }), 200
